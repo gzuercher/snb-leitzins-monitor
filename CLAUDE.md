@@ -20,9 +20,14 @@ verschickt. Deployment: Docker-Image, getriggert via Cron auf dem Linux-Host
   `SMTP_PORT=25`.
 - `Dockerfile`: `python:3.12-slim`, kopiert `main.py`, ENTRYPOINT ruft Script.
   Keine `pip install`-Schritte (keine Dependencies).
-- Trigger: Crontab-Eintrag auf dem Host (`0 8 5 * * docker run --rm
-  --network=host snb-leitzins:latest`). `--network=host` ist nötig, damit
-  der Container den Postfix auf `localhost:25` erreicht.
+- `docker-compose.yml`: Service `snb-leitzins` mit `build: .`,
+  `network_mode: host` (für Postfix auf 127.0.0.1:25), `env_file: .env`,
+  `profiles: ["scheduled"]` — Profil verhindert Auto-Start durch
+  `~/scripts/update-stacks.sh`.
+- `.skip-update`: Marker für `~/scripts/update-stacks.sh` (lokales Image,
+  kein Registry-Pull).
+- Trigger: User-Crontab-Eintrag (`0 8 5 * * cd /opt/stacks/... && docker
+  compose --profile scheduled run --rm snb-leitzins`).
 - `requirements.txt` ist absichtlich leer.
 
 ## Lokal testen

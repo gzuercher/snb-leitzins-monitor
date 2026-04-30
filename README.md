@@ -4,7 +4,7 @@ Kleines Python-Script, das einmal pro Monat den aktuellen Leitzins der
 Schweizerischen Nationalbank (SNB) abruft und per E-Mail verschickt - inkl.
 Vergleich zum Vormonat und farblicher Markierung bei Änderungen.
 
-Läuft als Docker-Container, getriggert von Cron auf einem Linux-Host.
+Läuft als Docker-Compose-Stack, getriggert von Cron auf einem Linux-Host.
 Mailversand über lokalen MTA (z.B. Postfix). Keine externen Dienste, keine
 Cloud, keine Python-Dependencies ausserhalb der Standardbibliothek.
 
@@ -17,19 +17,20 @@ Cloud, keine Python-Dependencies ausserhalb der Standardbibliothek.
 
 ## Voraussetzungen
 
-- Linux-Host mit Docker und Cron
+- Linux-Host mit Docker (inkl. Compose-Plugin) und Cron
 - Lokaler MTA, der Mails nach extern zustellen kann (Postfix, msmtp, ...)
 
 ## Installation
 
-Siehe [DEPLOYMENT.md](DEPLOYMENT.md).
-
-Schnellversion:
+Siehe [DEPLOYMENT.md](DEPLOYMENT.md). Kurz:
 
 ```bash
-sudo docker build -t snb-leitzins:latest .
-# in sudo crontab -e (EMAIL_TO ist Pflicht):
-# 0 8 5 * * /usr/bin/docker run --rm --network=host -e EMAIL_TO=du@example.com snb-leitzins:latest
+git clone https://github.com/gzuercher/snb-leitzins-monitor.git
+cd snb-leitzins-monitor
+cp .env.example .env && $EDITOR .env   # EMAIL_TO setzen
+docker compose build
+# Cron (User-Crontab):
+# 0 8 5 * * cd /opt/stacks/snb-leitzins-monitor && docker compose --profile scheduled run --rm snb-leitzins
 ```
 
 ## Konfiguration

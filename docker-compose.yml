@@ -1,0 +1,14 @@
+services:
+  snb-leitzins:
+    build: .
+    image: snb-leitzins:latest
+    container_name: snb-leitzins
+    # Profile verhindert, dass `docker compose up -d` (z.B. via
+    # update-stacks.sh) den Container startet und damit eine Mail
+    # ausloest. Aufruf erfolgt explizit per Cron mit
+    # `--profile scheduled run --rm snb-leitzins`.
+    profiles: ["scheduled"]
+    # Erreicht den Postfix-MTA auf dem Host via 127.0.0.1:25.
+    network_mode: host
+    env_file: .env
+    restart: "no"
