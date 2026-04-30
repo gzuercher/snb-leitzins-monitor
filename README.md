@@ -28,7 +28,7 @@ Siehe [DEPLOYMENT.md](DEPLOYMENT.md). Kurz:
 git clone https://github.com/gzuercher/snb-leitzins-monitor.git
 cd snb-leitzins-monitor
 cp .env.example .env && $EDITOR .env   # EMAIL_TO setzen
-docker compose build
+docker compose --profile scheduled build
 # Cron (User-Crontab):
 # 0 8 5 * * cd /opt/stacks/snb-leitzins-monitor && docker compose --profile scheduled run --rm snb-leitzins
 ```

@@ -28,7 +28,7 @@ git clone https://github.com/gzuercher/snb-leitzins-monitor.git
 cd snb-leitzins-monitor
 cp .env.example .env
 $EDITOR .env                  # EMAIL_TO eintragen
-docker compose build
+docker compose --profile scheduled build
 ```
 
 ## 3. Manuell testen
@@ -61,7 +61,7 @@ Code-Aenderungen aus dem Git-Repo holen und Image neu bauen
 ```bash
 cd /opt/stacks/snb-leitzins-monitor
 git pull
-docker compose build
+docker compose --profile scheduled build
 ```
 
 ## Troubleshooting
@@ -71,4 +71,5 @@ docker compose build
 | Keine Mail | `~/scripts/logs/snb-leitzins.log`, `mailq`, `journalctl -u postfix` |
 | Cron laeuft nicht | `journalctl -u crond --since "1 hour ago"` |
 | `EMAIL_TO ist nicht gesetzt` | `.env` vorhanden? `docker compose config` zeigt geladene Vars |
-| Image fehlt | `docker compose build` im Stack-Dir |
+| Image fehlt | `docker compose --profile scheduled build` im Stack-Dir |
+| `WARN: No services to build` | `--profile scheduled` vergessen |
